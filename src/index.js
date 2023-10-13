@@ -1,9 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import MongoAPI from './mongoAPI.js';
+import {handleRegistration, handleLogin} from './reqHandlers.js'
+
+
+const mongoAPI = new MongoAPI(process.env.MONGODB_CONNECTION_STRING);
 
 
 const app = express();
-
 
 app.use(cors());
 app.use(express.json())
@@ -20,21 +24,16 @@ app.get("/api/v1/users", (req, res) => {
 });
 
 app.post("/api/v1/login", (req, res) => {
-    let data = req.body;
-    console.log(data);
-
-    return res.status(200).json({messageTitle: "Success", message: "Logged in successfully"});
+    handleLogin(req, res, mongoAPI);
 });
 
 
 app.post("/api/v1/register", (req, res) => {
-    let data = req.body;
-    console.log(data);
-
-    return res.status(200).json({messageTitle: "Success", message: "New user succesfully registered"});
+    handleRegistration(req, res, mongoAPI);
 });
 
 
 app.listen(5000, () => {
     console.log('listening on http://localhost:5000');
 })
+
