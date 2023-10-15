@@ -1,15 +1,17 @@
 import mongoose, {Schema} from 'mongoose';
-import crypto from 'crypto';
 
 
 import 'dotenv/config';
 
 
 const userSchema = new Schema({
-    login: String,
-    email: String,
-    password: String,
-    nickname: String,
+    idhash: Buffer,
+    encryptedKey: Buffer,
+    salt: Buffer,
+    login: Buffer,
+    email: Buffer,
+    password: Buffer,
+    nickname: Buffer,
     articles: Array
 })
 
@@ -34,7 +36,8 @@ class MongoAPI {
 
     async createUser(userdata) {
         const user = new User(userdata);
-        const entries = await User.find({login: user.login});
+        console.log(user);
+        const entries = await User.find({idhash: user.idhash});
         if (entries.length == 0) {
             await user.save();
         }
@@ -43,10 +46,20 @@ class MongoAPI {
         }
     }
 
+    async readUser(idhash) {
+        const entries = await User.find({idhash: idhash});
+        if (entries.length == 0) {
+            throw new Error("user not found");
+        }
+        else {
+            return entries[0];
+        }
+    }
+
     async loginUser(userdata) {
         const entries = await User.find({login: userdata.login});
         if (entries.length == 0) {
-            throw new Error("User with this login and password does not exists");
+            return null;
         }
         else if (entries[0].password !== userdata.password) {
             throw new Error("User with this login and password does not exists"); 

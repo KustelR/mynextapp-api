@@ -23,12 +23,12 @@ app.get("/api/v1/users", (req, res) => {
     return res.status(200).json({users});
 });
 
-app.post("/api/v1/login", (req, res) => {
+app.post("/auth/v1/login", (req, res) => {
     handleLogin(req, res, mongoAPI);
 });
 
 
-app.post("/api/v1/register", (req, res) => {
+app.post("/auth/v1/register", (req, res) => {
     handleRegistration(req, res, mongoAPI);
 });
 
