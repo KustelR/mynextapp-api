@@ -84,8 +84,7 @@ async function getDecryptedData(algorithm, key, iv, ciphertext) {
 
 
 export default class {
-    constructor(salt) {
-        this.salt = salt;
+    constructor() {
         this.algorithm = 'aes-192-cbc';
     }
 
@@ -93,18 +92,21 @@ export default class {
     algorithm;
 
     async encrypt(password, plaintext) {
-        const key = await createScrypt(password, this.salt);
+        const salt = await genRandomKey(16);
         const iv = await genRandomKey(16);
+        const key = await createScrypt(password, salt);
 
         const encrypted = await getEncryptedData(this.algorithm, key, iv, plaintext);
         
-        return Buffer.from([...iv, ...encrypted]);
+        return Buffer.from([...iv, ...salt, ...encrypted]);
     }
 
     async decrypt(password, cipherdata) {
-        const key = await createScrypt(password, this.salt);
         const iv = cipherdata.slice(0, 16);
-        const ciphertext = cipherdata.slice(16);
+        const salt = cipherdata.slice(16, 32);
+        const ciphertext = cipherdata.slice(32);
+
+        const key = await createScrypt(password, salt);
 
         return await getDecryptedData(this.algorithm, key, iv, ciphertext);
     }
