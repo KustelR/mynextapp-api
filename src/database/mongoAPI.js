@@ -1,21 +1,9 @@
 import mongoose, {Schema} from 'mongoose';
+import User from './models/user.js';
+import UserPublic from './models/userPublic.js';
 
 
 import 'dotenv/config';
-
-
-const userSchema = new Schema({
-    idhash: Buffer,
-    encryptedKey: Buffer,
-    salt: Buffer,
-    login: Buffer,
-    email: Buffer,
-    password: Buffer,
-    nickname: Buffer,
-    articles: Array
-})
-
-const User = mongoose.model('Users', userSchema);
 
 
 class MongoAPI {
@@ -36,13 +24,33 @@ class MongoAPI {
 
     async createUser(userdata) {
         const user = new User(userdata);
-        console.log(user);
         const entries = await User.find({idhash: user.idhash});
         if (entries.length == 0) {
             await user.save();
         }
         else {
             throw new Error("User with this login already exists");
+        }
+    }
+
+    async createUserPublic(userdata) {
+        const user = new UserPublic(userdata);
+        const entries = await UserPublic.find({login: user.login});
+        if (entries.length == 0) {
+            await user.save();
+        }
+        else {
+            throw new Error("User with this login already exists");
+        }
+    }
+
+    async readUserPublic(login) {
+        const entries = await UserPublic.find({login: login});
+        if (entries.length == 0) {
+            throw new Error("user not found");
+        }
+        else {
+            return entries[0];
         }
     }
 
