@@ -1,14 +1,14 @@
 import {createToken, verifyToken} from './jwt_gen.js';
 
 
-async function createAccessToken(user_id, accessRights) {
-    return await createToken({user_id: user_id, accessRights: accessRights}, {algorithm: 'RS256', expiresIn: "6h"})
+async function createAccessToken(user_id, data) {
+    return await createToken({user_id: user_id, data: data}, {algorithm: 'RS256', expiresIn: "6h"})
 }
 
-async function createRefreshToken(user_id, accessRights) {
+async function createRefreshToken(user_id, data) {
     return await createToken({
         user_id: user_id, 
-        accessRights: accessRights
+        data: data
         },
         {algorithm: 'RS256',
          expiresIn: "30d"})
