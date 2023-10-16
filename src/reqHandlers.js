@@ -65,6 +65,7 @@ async function handleRegistration(req, res, mongoAPI) {
 
     try {
         await mongoAPI.createUser(encryptedData);
+        await mongoAPI.createUserPublic(data);
     }
     catch (err) {
         return res.status(400).json({messageTitle: "Failure", message: err.message});
