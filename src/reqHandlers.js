@@ -1,5 +1,5 @@
 import CipherThing, {genRandomBytes, hash} from "./cryptothings/CipherThing.js";
-import  {createSession} from './auths.js';
+import {createRefreshToken, createAccessToken, verifyAccess} from './auth/token_gen.js';
 
 const cipher = new CipherThing('static');
 
@@ -45,7 +45,7 @@ async function handleRegistration(req, res, mongoAPI) {
 
     const salt = await genRandomBytes(16);
     const passwordHash = await hash(data.password, 200000, salt);
-    const loginHash = await hash(data.login, 50000, 'static');
+    const loginHash = await hash(data.login, 200000, 'static');
     delete data["password"];
 
 
@@ -69,7 +69,27 @@ async function handleRegistration(req, res, mongoAPI) {
     catch (err) {
         return res.status(400).json({messageTitle: "Failure", message: err.message});
     }
-    return res.status(200).json({messageTitle: "Success", message: "New user succesfully registered"});
+    return res.status(201).json(
+        {
+        messageTitle: "Success", 
+        message: "New user succesfully registered",
+        toLocalStorage: {
+            refreshToken: await createRefreshToken(
+                loginHash, 
+                {
+                    "basic-access": true, 
+                    "personal_cabinet": true, 
+                    login: data.login
+                }),
+            accessToken: await createAccessToken(
+                loginHash, 
+                {
+                    "basic-access": true, 
+                    "personal_cabinet": true, 
+                    login: data.login
+                })
+        }
+    })
 }
 
 
@@ -78,7 +98,7 @@ async function handleLogin(req, res, mongoAPI) {
     let data = req.body;
     let userInstance;
 
-    const idHash = await hash(data.login, 50000, 'static');
+    const idHash = await hash(data.login, 200000, 'static');
 
     try {
         userInstance = await mongoAPI.readUser(idHash);
@@ -89,18 +109,36 @@ async function handleLogin(req, res, mongoAPI) {
 
     if (userInstance) {
         try {
-            console.log(userInstance)
             const salt = userInstance.salt;
 
             const passwordHash = await hash(data.password, 200000, salt);
-            console.log(Buffer.from(userInstance.encryptedKey))
             const encryptedKey = Buffer.from(userInstance.encryptedKey);
 
             const encryptionKey = await cipher.decrypt(passwordHash, encryptedKey);
             const login = (await cipher.decrypt(encryptionKey, userInstance.login)).toString();
 
             if (login === data.login) {
-                return res.status(200).json({messageTitle: "Success", message: "User logged in succesfully", token: await createSession({permissions: {'no': true}, identity: login})});
+                return res.status(200).json(
+                {
+                    messageTitle: "Success",
+                    message: "User logged in succesfully",
+                    toLocalStorage: {
+                        refreshToken: await createRefreshToken(
+                            idHash, 
+                            {
+                                "basic-access": true, 
+                                "personal_cabinet": true, 
+                                login: data.login
+                            }),
+                        accessToken: await createAccessToken(
+                            idHash, 
+                            {
+                                "basic-access": true, 
+                                "personal_cabinet": true, 
+                                login: data.login
+                            })
+                    }
+                });
             }
         }
         catch (err) {
