@@ -1,12 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import MongoAPI from './database/mongoAPI.js';
-import {handleRegistration, handleLogin} from './reqHandlers.js'
+import handleRegistration from './requestHandlers/registration.js'
 import handleFindUser from './requestHandlers/findUserPublic.js'
+import handleTokenRefresh from './requestHandlers/genNewAccessToken.js'
+import handleArticleCreation from './requestHandlers/postArticle.js';
+import handleLogin from './requestHandlers/login.js';
+import getArticle from './requestHandlers/getArticle.js';
 
 
-const mongoAPI = new MongoAPI(process.env.MONGODB_CONNECTION_STRING);
-
+const mongoAPI = new MongoAPI(process.env.MONGODB_URI);
 
 const app = express();
 
@@ -16,8 +19,20 @@ app.use(express.json())
 
 app.get("/api/v1/users/me", (req, res) => {
     handleFindUser(req, res, mongoAPI);
-    return res.status(500)
-    
+});
+
+
+app.post("/api/v1/articles/create", (req, res) => {
+    handleArticleCreation(req, res, mongoAPI);
+});
+
+app.get("/api/v1/articles/get", (req, res) => {
+    getArticle(req, res, mongoAPI);
+});
+
+
+app.get("/auth/v1/users/get_access_token", (req, res) => {
+    handleTokenRefresh(req, res, mongoAPI);
 });
 
 
