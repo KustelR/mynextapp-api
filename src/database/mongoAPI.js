@@ -1,9 +1,7 @@
-import mongoose, {Schema} from 'mongoose';
+import mongoose from 'mongoose';
 import User from './models/user.js';
 import UserPublic from './models/userPublic.js';
-
-
-import 'dotenv/config';
+import Article from './models/article.js';
 
 
 class MongoAPI {
@@ -17,7 +15,9 @@ class MongoAPI {
 
     async connect(db) {
         if (!this.isConnected) {
-            await mongoose.connect(this.connectionString + db);
+            console.log(this.connectionString)
+            await mongoose.connect(this.connectionString + `/${db}`);
+            console.log('Connected to database');
             this.isConnected = true;
         }
     }
@@ -74,6 +74,22 @@ class MongoAPI {
         }
         else {
             return crypto.randomBytes(256);
+        }
+    }
+
+    async createArticle(articleData) {
+        const article = new Article(articleData);
+        article.save();
+    }
+
+    async findArticle(title) {
+        console.log(title)
+        const entries = await Article.find({title: title});
+        if (entries.length > 0) {
+            return entries[0];
+        }
+        else {
+            return null;
         }
     }
 }
