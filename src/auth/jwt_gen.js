@@ -1,17 +1,11 @@
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
+
+
+import 'dotenv/config'
 
 
 async function getPrivateKey() {
     return process.env.SERVER_KEY
-    /*
-    return new Promise(function(resolve, reject) {
-        fs.readFile('./private.key', {encoding: 'utf-8'}, (err, data) => {
-            if (err) reject(err);
-            resolve(data);
-        })
-    })
-    */
 }
 
 
