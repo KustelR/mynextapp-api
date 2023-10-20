@@ -1,11 +1,16 @@
 import express from 'express';
 import cors from 'cors';
-import MongoAPI from './mongoAPI.js';
-import {handleRegistration, handleLogin} from './reqHandlers.js'
+import MongoAPI from './database/mongoAPI.js';
+import handleRegistration from './requestHandlers/registration.js'
+import handleFindUser from './requestHandlers/findUserPublic.js'
+import handleTokenRefresh from './requestHandlers/genNewAccessToken.js'
+import handleArticleCreation from './requestHandlers/postArticle.js';
+import handleLogin from './requestHandlers/login.js';
+import getArticle from './requestHandlers/getArticle.js';
+import getArticlesPreviews from './requestHandlers/getArticlesPreviews.js';
 
 
-const mongoAPI = new MongoAPI(process.env.MONGODB_CONNECTION_STRING);
-
+const mongoAPI = new MongoAPI(process.env.MONGODB_URI);
 
 const app = express();
 
@@ -13,22 +18,35 @@ app.use(cors());
 app.use(express.json())
 
 
-app.get("/api/v1/users", (req, res) => {
-    const users = [
-        {id: 1, name: "Oleg"},
-        {id: 2, name: "aboba"},
-        {id: 3, name: "AGDchan"},
-    ];
-
-    return res.status(200).json({users});
+app.get("/api/v1/users/me", (req, res) => {
+    handleFindUser(req, res, mongoAPI);
 });
 
-app.post("/api/v1/login", (req, res) => {
+
+app.post("/api/v1/articles/create", (req, res) => {
+    handleArticleCreation(req, res, mongoAPI);
+});
+
+app.get("/api/v1/articles/get", (req, res) => {
+    getArticle(req, res, mongoAPI);
+});
+
+app.get("/api/v1/articles/get/previews", (req, res) => {
+    getArticlesPreviews(req, res, mongoAPI);
+});
+
+
+app.get("/auth/v1/get_access_token", (req, res) => {
+    handleTokenRefresh(req, res, mongoAPI);
+});
+
+
+app.post("/auth/v1/login", (req, res) => {
     handleLogin(req, res, mongoAPI);
 });
 
 
-app.post("/api/v1/register", (req, res) => {
+app.post("/auth/v1/register", (req, res) => {
     handleRegistration(req, res, mongoAPI);
 });
 

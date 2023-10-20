@@ -1,0 +1,106 @@
+import mongoose from 'mongoose';
+import User from './models/user.js';
+import UserPublic from './models/userPublic.js';
+import Article from './models/article.js';
+
+
+class MongoAPI {
+    constructor(connectionString) {
+        this.connectionString = connectionString;
+    }
+
+    connectionString;
+    isConnected = false;
+
+
+    async connect(db) {
+        if (!this.isConnected) {
+            console.log(this.connectionString)
+            await mongoose.connect(this.connectionString + `/${db}`);
+            console.log('Connected to database');
+            this.isConnected = true;
+        }
+    }
+
+    async createUser(userdata) {
+        const user = new User(userdata);
+        const entries = await User.find({idhash: user.idhash});
+        if (entries.length == 0) {
+            await user.save();
+        }
+        else {
+            throw new Error("User with this login already exists");
+        }
+    }
+
+    async createUserPublic(userdata) {
+        const user = new UserPublic(userdata);
+        const entries = await UserPublic.find({login: user.login});
+        if (entries.length == 0) {
+            await user.save();
+        }
+        else {
+            throw new Error("User with this login already exists");
+        }
+    }
+
+    async readUserPublic(login) {
+        const entries = await UserPublic.find({login: login});
+        if (entries.length == 0) {
+            throw new Error("user not found");
+        }
+        else {
+            return entries[0];
+        }
+    }
+
+    async readUser(idhash) {
+        const entries = await User.find({idhash: idhash});
+        if (entries.length == 0) {
+            throw new Error("user not found");
+        }
+        else {
+            return entries[0];
+        }
+    }
+
+    async loginUser(userdata) {
+        const entries = await User.find({login: userdata.login});
+        if (entries.length == 0) {
+            return null;
+        }
+        else if (entries[0].password !== userdata.password) {
+            throw new Error("User with this login and password does not exists"); 
+        }
+        else {
+            return crypto.randomBytes(256);
+        }
+    }
+
+    async createArticle(articleData) {
+        const article = new Article(articleData);
+        article.save();
+    }
+
+    async findArticle(title) {
+        const entries = await Article.find({title: title});
+        if (entries.length > 0) {
+            return entries[0];
+        }
+        else {
+            return null;
+        }
+    }
+
+    async getArticlesPreviews(q) {
+        const entries = await Article.find({});
+        if (entries.length > 0) {
+            return entries;
+        }
+        else {
+            return null;
+        }
+    }
+}
+
+export default MongoAPI
