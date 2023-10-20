@@ -2,14 +2,14 @@ import mongoose, {Schema} from 'mongoose';
 
 
 const articleSchema = new Schema({
-    authorName: String,
     title: String,
-    postTime: String,
-    posterNickanme: String,
+    postTime: Number,
+    authorLogin: String,
     upvotes: String,
     downvotes: String,
     body: String,
-    tags: String
+    tags: Array,
+    description: String,
 })
 
 export default mongoose.model('Articles', articleSchema);
