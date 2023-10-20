@@ -83,10 +83,19 @@ class MongoAPI {
     }
 
     async findArticle(title) {
-        console.log(title)
         const entries = await Article.find({title: title});
         if (entries.length > 0) {
             return entries[0];
+        }
+        else {
+            return null;
+        }
+    }
+
+    async getArticlesPreviews(q) {
+        const entries = await Article.find({});
+        if (entries.length > 0) {
+            return entries;
         }
         else {
             return null;
