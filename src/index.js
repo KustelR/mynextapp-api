@@ -7,6 +7,7 @@ import handleTokenRefresh from './requestHandlers/genNewAccessToken.js'
 import handleArticleCreation from './requestHandlers/postArticle.js';
 import handleLogin from './requestHandlers/login.js';
 import getArticle from './requestHandlers/getArticle.js';
+import getArticlesPreviews from './requestHandlers/getArticlesPreviews.js';
 
 
 const mongoAPI = new MongoAPI(process.env.MONGODB_URI);
@@ -30,8 +31,12 @@ app.get("/api/v1/articles/get", (req, res) => {
     getArticle(req, res, mongoAPI);
 });
 
+app.get("/api/v1/articles/get/previews", (req, res) => {
+    getArticlesPreviews(req, res, mongoAPI);
+});
 
-app.get("/auth/v1/users/get_access_token", (req, res) => {
+
+app.get("/auth/v1/get_access_token", (req, res) => {
     handleTokenRefresh(req, res, mongoAPI);
 });
 
