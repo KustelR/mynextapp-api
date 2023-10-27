@@ -1,7 +1,7 @@
 import getArticlesPreviews from "../../database/methods/articles/getArticlesPreviews.js";
 
 
-async function getArticlesPreviews(req, res) {
+async function ArticlePreviews(req, res) {
     const articles = await getArticlesPreviews(req.query)
 
     if (articles) {
@@ -15,4 +15,4 @@ async function getArticlesPreviews(req, res) {
     }
 }
 
-export default getArticlesPreviews
+export default ArticlePreviews
