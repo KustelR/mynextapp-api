@@ -1,5 +1,8 @@
-async function getArticlesPreviews(req, res, mongoAPI) {
-    const articles = await mongoAPI.getArticlesPreviews(req.query)
+import getArticlesPreviews from "../../database/methods/articles/getArticlesPreviews.js";
+
+
+async function getArticlesPreviews(req, res) {
+    const articles = await getArticlesPreviews(req.query)
 
     if (articles) {
         res.status(200).json(articles);
