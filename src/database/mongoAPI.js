@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import User from './models/user.js';
 import UserPublic from './models/userPublic.js';
-import Article from './models/article.js';
 
 
 class MongoAPI {
