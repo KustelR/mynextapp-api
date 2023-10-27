@@ -11,7 +11,6 @@ async function handle(req, res) {
             res.status(403).json({messageTitle: "Failure", message: "You need to be authorized to perfrom this action"});
             return;
         }
-
         const authToken = await verifyToken(rawArticle.accessToken);
         article.authorLogin = authToken.data.login;
     }
