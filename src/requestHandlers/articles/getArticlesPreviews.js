@@ -1,6 +1,4 @@
 async function getArticlesPreviews(req, res, mongoAPI) {
-    mongoAPI.connect('myreactapp');
-
     const articles = await mongoAPI.getArticlesPreviews(req.query)
 
     if (articles) {

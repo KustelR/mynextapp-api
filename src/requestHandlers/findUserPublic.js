@@ -2,8 +2,6 @@ import {verifyToken} from '../auth/jwt_gen.js';
 
 
 async function getUserPublic(login, mongoAPI) {
-    mongoAPI.connect('myreactapp');
-
     return await mongoAPI.readUserPublic(login);
 }
 

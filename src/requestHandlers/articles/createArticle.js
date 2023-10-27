@@ -1,7 +1,8 @@
-import { verifyToken } from "../auth/jwt_gen.js";
+import { verifyToken } from "../../auth/jwt_gen.js";
+import createArticle from "../../database/methods/articles/createArticle.js";
 
 
-async function handle(req, res, mongoAPI) {
+async function handle(req, res) {
     const rawArticle = req.body;
     let article = rawArticle;
     
@@ -34,9 +35,8 @@ async function handle(req, res, mongoAPI) {
     article.tags = rawArticle.tags.split(', ');
 
     article.postTime = new Date();
-    mongoAPI.connect('myreactapp');
     try {
-        await mongoAPI.createArticle(article)
+        await createArticle(article)
     }
     catch (err) {
         res.status(200).json({messageTitle: "FAILURE!", message: err.message})

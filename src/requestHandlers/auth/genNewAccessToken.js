@@ -1,15 +1,14 @@
-import {verifyToken} from '../auth/jwt_gen.js';
-import {createAccessToken} from '../auth/token_gen.js';
+import {verifyToken} from '../../auth/jwt_gen.js';
+import {createAccessToken} from '../../auth/token_gen.js';
 
 
 async function getUserPublic(login, mongoAPI) {
-    mongoAPI.connect('myreactapp');
 
     return await mongoAPI.readUserPublic(login);
 }
 
 
-async function userPublicByAccessKey(req, res, mongoAPI) {
+async function userPublicByAccessKey(req, res) {
     const refreshToken = req.query.refresh_token;
     let token;
     let login;
