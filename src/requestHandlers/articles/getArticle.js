@@ -4,7 +4,7 @@ import findArticles from "../../database/methods/articles/findArticles.js";
 async function getArticle(req, res) {
     const article = await findArticles(req.query)
 
-    if (article.length > 0) {
+    if (article) {
         return res.status(200).json(article[0]);
     }
     else {

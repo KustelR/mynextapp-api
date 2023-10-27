@@ -29,23 +29,23 @@ app.use(express.json())
 
 
 app.get("/api/v1/users/me", (req, res) => {
-    handleFindUser(req, res, mongoAPI);
+    handleFindUser(req, res);
 });
 
 app.post("/api/v1/articles", (req, res) => {
-    createArticle(req, res, mongoAPI);
+    createArticle(req, res);
 });
 
 app.get("/api/v1/articles", (req, res) => {
-    getArticle(req, res, mongoAPI);
+    getArticle(req, res);
 });
 
 app.put("/api/v1/articles", (req, res) => {
-    updateArticle(req, res, mongoAPI);
+    updateArticle(req, res);
 });
 
 app.delete("/api/v1/articles", (req, res) => {
-    deleteArticle(req, res, mongoAPI);
+    deleteArticle(req, res);
 });
 
 app.get("/api/v1/articles/previews", (req, res) => {
