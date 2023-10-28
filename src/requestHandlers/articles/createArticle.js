@@ -1,5 +1,5 @@
 import { verifyToken } from "../../auth/jwt_gen.js";
-import createArticle from "../../database/methods/articles/createArticle.js";
+import createArticle from "../../database/methods/articles/create.js";
 
 
 async function handle(req, res) {

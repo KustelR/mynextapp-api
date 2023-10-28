@@ -1,4 +1,4 @@
-import getArticlesPreviews from "../../database/methods/articles/getArticlesPreviews.js";
+import getArticlesPreviews from "../../database/methods/articles/getPreviews.js";
 
 
 async function ArticlePreviews(req, res) {
