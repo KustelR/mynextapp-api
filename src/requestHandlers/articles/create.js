@@ -31,8 +31,7 @@ async function handle(req, res) {
         res.status(400).json({messageTitle: "Failure", message: "Found blacklisted tags"});
         return;
     }
-
-    article.tags = rawArticle.tags.split(', ');
+    if (typeof(article.tags) == "string") article.tags = rawArticle.tags.split(', ');
 
     article.postTime = new Date();
     try {

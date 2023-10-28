@@ -9,11 +9,11 @@ import handleFindUser from './requestHandlers/findUserPublic.js'
 import handleTokenRefresh from './requestHandlers/auth/genNewAccessToken.js'
 import handleLogin from './requestHandlers/auth/login.js';
 
-import getArticlesPreviews from './requestHandlers/articles/getArticlesPreviews.js';
-import getArticle from './requestHandlers/articles/getArticle.js';
-import createArticle from './requestHandlers/articles/createArticle.js'
-import updateArticle from './requestHandlers/articles/updateArticle.js';
-import deleteArticle from './requestHandlers/articles/deleteArticle.js';
+import getArticlesPreviews from './requestHandlers/articles/getPreviews.js';
+import getArticle from './requestHandlers/articles/get.js';
+import createArticle from './requestHandlers/articles/create.js'
+import updateArticle from './requestHandlers/articles/update.js';
+import deleteArticle from './requestHandlers/articles/delete.js';
 
 
 const mongoAPI = new MongoAPI(process.env.MONGODB_URI);
@@ -40,7 +40,7 @@ app.get("/api/v1/articles", (req, res) => {
     getArticle(req, res);
 });
 
-app.put("/api/v1/articles", (req, res) => {
+app.patch("/api/v1/articles", (req, res) => {
     updateArticle(req, res);
 });
 
