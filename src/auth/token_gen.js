@@ -2,7 +2,6 @@ import {createToken, verifyToken} from './jwt_gen.js';
 
 
 async function createAccessToken(user_id, data) {
-    console.log(user_id, data)
     return await createToken({user_id: user_id, data: data}, {algorithm: 'RS256', expiresIn: "6h"})
 }
 
