@@ -3,7 +3,7 @@ import mongoose, {Schema} from 'mongoose';
 
 const articleSchema = new Schema({
     title: String,
-    postTime: Number,
+    postTime: Date,
     authorLogin: String,
     upvotes: {type: Number, default: 0},
     downvotes: {type: Number, default: 0},
