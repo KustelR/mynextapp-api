@@ -53,7 +53,7 @@ app.get("/api/v1/articles/previews", (req, res) => {
 });
 
 
-app.get("/auth/v1/get_access_token", (req, res) => {
+app.get("/auth/v1/accesstoken", (req, res) => {
     handleTokenRefresh(req, res, mongoAPI);
 });
 
