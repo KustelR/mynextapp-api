@@ -29,7 +29,7 @@ app.use(express.json())
 
 
 app.get("/api/v1/users/me", (req, res) => {
-    handleFindUser(req, res);
+    handleFindUser(req, res, mongoAPI);
 });
 
 app.post("/api/v1/articles", (req, res) => {
