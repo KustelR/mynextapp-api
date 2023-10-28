@@ -6,7 +6,7 @@ import { verifyToken } from "../../auth/jwt_gen.js";
 export default async function handle(req, res) {
     let authToken;
     try {
-        authToken = await verifyToken(req.headers["x-auth-token"]);
+        authToken = await verifyToken(req.headers["x-access-token"]);
     }
     catch (err) {
         res.status(403).json({messageTitle: "Failure", message: "You must be logged in to perform this action"});
@@ -24,7 +24,7 @@ export default async function handle(req, res) {
         return;
     }
     const article = articles[0]
-    
+
     if (!(authToken.data.login === article.authorLogin) || authToken.data.permissions.articleDeletion) {
         res.status(403).json({messageTitle: "Failure", message: "You are restricted from deleting this article"});
         res.send();
