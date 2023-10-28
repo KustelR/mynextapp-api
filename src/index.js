@@ -13,6 +13,7 @@ import getArticlesPreviews from './requestHandlers/articles/getPreviews.js';
 import getArticle from './requestHandlers/articles/get.js';
 import createArticle from './requestHandlers/articles/create.js'
 import updateArticle from './requestHandlers/articles/update.js';
+import voteForArticle from './requestHandlers/articles/vote.js';
 import deleteArticle from './requestHandlers/articles/delete.js';
 
 
@@ -42,6 +43,10 @@ app.get("/api/v1/articles", (req, res) => {
 
 app.patch("/api/v1/articles", (req, res) => {
     updateArticle(req, res);
+});
+
+app.put("/api/v1/articles/vote", (req, res) => {
+    voteForArticle(req, res);
 });
 
 app.delete("/api/v1/articles", (req, res) => {
