@@ -17,7 +17,6 @@ export default async function handle(req, res, dbCall=updateArticle) {
         result = await dbCall(query, patchData);
     }
     catch (error) {
-        console.error(error);
         res.status(500).json(error);
         res.send();
         return result;
