@@ -7,7 +7,7 @@ async function getUserPublic(login, mongoAPI) {
 
 
 async function userPublicByAccessKey(req, res, mongoAPI) {
-    const accessToken = req.query.access_token;
+    const accessToken = req.headers["x-access-token"];
     let token;
     if (accessToken) {
         try {

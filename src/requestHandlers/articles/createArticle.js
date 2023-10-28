@@ -3,15 +3,16 @@ import createArticle from "../../database/methods/articles/createArticle.js";
 
 
 async function handle(req, res) {
+    const accessToken = req.headers['x-access-token'];
     const rawArticle = req.body;
     let article = rawArticle;
     
     try {
-        if (!rawArticle.accessToken) {
+        if (!accessToken) {
             res.status(403).json({messageTitle: "Failure", message: "You need to be authorized to perfrom this action"});
             return;
         }
-        const authToken = await verifyToken(rawArticle.accessToken);
+        const authToken = await verifyToken(accessToken);
         article.authorLogin = authToken.data.login;
     }
     catch (error) {
