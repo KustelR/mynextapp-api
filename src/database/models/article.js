@@ -7,6 +7,8 @@ const articleSchema = new Schema({
     authorLogin: String,
     upvotes: {type: Number, default: 0},
     downvotes: {type: Number, default: 0},
+    upvotedBy: {type: Array, default: []},
+    downvotedBy: {type: Array, default: []},
     body: String,
     tags: Array,
     description: String,

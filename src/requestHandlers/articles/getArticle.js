@@ -1,4 +1,4 @@
-import findArticles from "../../database/methods/articles/findArticles.js";
+import findArticles from "../../database/methods/articles/get.js";
 
 
 async function getArticle(req, res) {

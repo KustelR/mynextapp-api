@@ -1,5 +1,5 @@
-import deleteArticle from "../../database/methods/articles/deleteArticle.js";
-import findArticles from "../../database/methods/articles/findArticles.js";
+import deleteArticle from "../../database/methods/articles/delete.js";
+import findArticles from "../../database/methods/articles/get.js";
 import { verifyToken } from "../../auth/jwt_gen.js";
 
 
