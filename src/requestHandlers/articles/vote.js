@@ -1,5 +1,6 @@
 import vote from "../../database/methods/articles/vote.js";
 import { verifyToken } from "../../auth/jwt_gen.js";
+import authUser from "./utils/authUser.js";
 
 
 /**
@@ -10,7 +11,6 @@ import { verifyToken } from "../../auth/jwt_gen.js";
  * @returns 
  */
 export default async function handle(req, res, dbCall=vote) {
-
     let authToken;
     try {
         authToken = await verifyToken(req.headers["x-access-token"]);
@@ -28,7 +28,8 @@ export default async function handle(req, res, dbCall=vote) {
         result = await dbCall(query, {login: authToken.data.login, voteChange: data.voteChange});
     }
     catch (error) {
-        res.status(500).json(error);
+        console.log(error);
+        res.status(500).json(error.message);
         res.send();
         return result;
     }
