@@ -17,6 +17,6 @@ describe('MongoDB connection health test', function () {
             test.save();
             assert.ok(Test.find({test: "test"}).length != 0)
             mongoose.disconnect();
-            });
         });
+    });
 })

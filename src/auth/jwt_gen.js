@@ -1,24 +1,11 @@
 import jwt from 'jsonwebtoken';
-
-
-import 'dotenv/config'
-
-
-async function getPrivateKey() {
-    return process.env.SERVER_KEY
-}
+import getPrivateKey from './getPrivateKey.js';
 
 
 async function createToken(payload, options = { algorithm: 'RS256', expiresIn: "2h" }) {
     const privateKey = await getPrivateKey();
 
-    return new Promise(function(resolve, reject) {
-
-        jwt.sign(payload, privateKey, options, (err, token) => {
-            if (err) reject(err);
-            resolve(token);
-          })
-    })
+    return jwt.sign(payload, privateKey, options);
 }
 
 

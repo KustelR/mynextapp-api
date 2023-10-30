@@ -64,8 +64,7 @@ async function getDecryptedData(algorithm, key, iv, ciphertext) {
     decipher.on('end', () => {
     });
 
-    const encrypted =
-        ciphertext;
+    const encrypted = ciphertext;
     decipher.write(encrypted);
     decipher.end();
 

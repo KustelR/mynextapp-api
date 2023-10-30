@@ -3,10 +3,11 @@ import mongoose, {Schema} from 'mongoose';
 
 const articleSchema = new Schema({
     title: String,
-    postTime: Number,
+    postTime: Date,
     authorLogin: String,
-    upvotes: String,
-    downvotes: String,
+    votes: {type: Number, default: 0},
+    upvotedBy: [String],
+    downvotedBy: [String],
     body: String,
     tags: Array,
     description: String,

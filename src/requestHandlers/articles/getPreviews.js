@@ -1,7 +1,8 @@
-async function getArticlesPreviews(req, res, mongoAPI) {
-    mongoAPI.connect('myreactapp');
+import getArticlesPreviews from "../../database/methods/articles/getPreviews.js";
 
-    const articles = await mongoAPI.getArticlesPreviews(req.query)
+
+async function ArticlePreviews(req, res) {
+    const articles = await getArticlesPreviews(req.query)
 
     if (articles) {
         res.status(200).json(articles);
@@ -14,4 +15,4 @@ async function getArticlesPreviews(req, res, mongoAPI) {
     }
 }
 
-export default getArticlesPreviews
+export default ArticlePreviews

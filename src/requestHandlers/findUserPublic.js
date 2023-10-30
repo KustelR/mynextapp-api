@@ -2,14 +2,12 @@ import {verifyToken} from '../auth/jwt_gen.js';
 
 
 async function getUserPublic(login, mongoAPI) {
-    mongoAPI.connect('myreactapp');
-
     return await mongoAPI.readUserPublic(login);
 }
 
 
 async function userPublicByAccessKey(req, res, mongoAPI) {
-    const accessToken = req.query.access_token;
+    const accessToken = req.headers["x-access-token"];
     let token;
     if (accessToken) {
         try {

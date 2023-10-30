@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import User from './models/user.js';
 import UserPublic from './models/userPublic.js';
-import Article from './models/article.js';
 
 
 class MongoAPI {
@@ -10,16 +9,10 @@ class MongoAPI {
     }
 
     connectionString;
-    isConnected = false;
-
 
     async connect(db) {
-        if (!this.isConnected) {
-            console.log(this.connectionString)
-            await mongoose.connect(this.connectionString + `/${db}`);
-            console.log('Connected to database');
-            this.isConnected = true;
-        }
+        await mongoose.connect(this.connectionString + `/${db}`);
+        console.log('Connected to database');
     }
 
     async createUser(userdata) {
@@ -74,31 +67,6 @@ class MongoAPI {
         }
         else {
             return crypto.randomBytes(256);
-        }
-    }
-
-    async createArticle(articleData) {
-        const article = new Article(articleData);
-        article.save();
-    }
-
-    async findArticle(title) {
-        const entries = await Article.find({title: title});
-        if (entries.length > 0) {
-            return entries[0];
-        }
-        else {
-            return null;
-        }
-    }
-
-    async getArticlesPreviews(q) {
-        const entries = await Article.find({});
-        if (entries.length > 0) {
-            return entries;
-        }
-        else {
-            return null;
         }
     }
 }
