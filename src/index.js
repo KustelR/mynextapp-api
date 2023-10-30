@@ -28,6 +28,14 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
+app.use((req, res, next) => {
+    delete req.query["any"];
+    console.log(req.query)
+    const isAuth = req.headers["x-access-token"];
+    console.log(`Received ${isAuth ? 'authorized' : 'unauthorized'} request from ${req.headers.origin} to ${req.path} at ${Date()}`);
+    next();
+})
+
 
 app.get("/api/v1/users/me", (req, res) => {
     handleFindUser(req, res, mongoAPI);
