@@ -1,11 +1,13 @@
 import { verifyToken } from "../../auth/jwt_gen.js";
 import createArticle from "../../database/methods/articles/create.js";
+import xss from 'xss';
 
 
 async function handle(req, res) {
     const accessToken = req.headers['x-access-token'];
     const rawArticle = req.body;
     let article = rawArticle;
+    article.body = xss(article.body);
     
     try {
         if (!accessToken) {
@@ -25,11 +27,6 @@ async function handle(req, res) {
     if (!(rawArticle.body && rawArticle.tags && rawArticle.description)) {
         res.status(400).json({messageTitle: "Failure", message: "Not all fields provided"});
             return;
-    }
-
-    if (rawArticle.body.includes('<script>')) {
-        res.status(400).json({messageTitle: "Failure", message: "Found blacklisted tags"});
-        return;
     }
     if (typeof(article.tags) == "string") article.tags = rawArticle.tags.split(', ');
 
