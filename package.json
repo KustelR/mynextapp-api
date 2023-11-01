@@ -5,21 +5,32 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon ./src/index.js",
+    "dev": "nodemon index.ts",
+    "start": "node index.ts",
     "test": "mocha test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chai": "^4.3.10",
-    "chai-as-promised": "^7.1.1",
+    "@fastify/cors": "^8.4.1",
+    "@fastify/type-provider-typebox": "^3.5.0",
+    "@sinclair/typebox": "^0.31.21",
+    "ajv": "^8.12.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "fastify": "^4.24.3",
+    "fastify-cors": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mocha": "^10.2.0",
     "mongoose": "^7.6.1",
+    "ts-node": "^10.9.1",
+    "xss": "^1.0.14"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^10.2.0",
     "nodemon": "^3.0.1"
   }
 }
