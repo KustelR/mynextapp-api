@@ -3,7 +3,7 @@ import findArticles from "../../database/methods/articles/get.js";
 
 async function getArticle(query, requesterLogin, dbCall=findArticles) {
     const articles = await dbCall(query);
-    if (articles) {
+    if (articles.length === 1) {
         let article = articles[0].toObject();
 
         if (article.upvotedBy.includes(requesterLogin)) {
@@ -20,6 +20,9 @@ async function getArticle(query, requesterLogin, dbCall=findArticles) {
         delete article["downvotedBy"];
 
         return article;
+    }
+    else {
+        return articles
     }
     return null;
 }
