@@ -2,15 +2,15 @@ import mongoose, {Schema} from 'mongoose';
 
 
 const articleSchema = new Schema({
-    title: String,
+    title: {type: String, required: true},
     postTime: Date,
-    authorLogin: String,
+    authorLogin: {type: String, required: true},
     votes: {type: Number, default: 0},
     upvotedBy: [String],
     downvotedBy: [String],
-    body: String,
+    body: {type: String, required: true},
     tags: Array,
-    description: String,
+    description: {type: String, required: true},
 })
 
 export default mongoose.model('Articles', articleSchema);
