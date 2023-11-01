@@ -1,22 +1,8 @@
 import findArticles from "../../database/methods/articles/get.js";
-import authUser from "./utils/authUser.js";
 
-/**
- * Handles get request to articles
- * @param {*} req 
- * @param {*} res 
- * @returns 
- */
-async function getArticle(req, res) {
-    const articles = await findArticles(req.query);
 
-    const token = req.headers["x-access-token"];
-    let authData = (await authUser(token, ["login"]));
-    let requesterLogin;
-    if (authData) {
-        requesterLogin = authData.login;
-    }
-
+async function getArticle(query, requesterLogin, dbCall=findArticles) {
+    const articles = await dbCall(query);
     if (articles) {
         let article = articles[0].toObject();
 
@@ -33,11 +19,9 @@ async function getArticle(req, res) {
         delete article["upvotedBy"];
         delete article["downvotedBy"];
 
-        return res.status(200).json(article);
+        return article;
     }
-    else {
-        return res.status(404).json({messageTitle: "FAILURE", message: "No such articles was found"})
-    }
+    return null;
 }
 
 export default getArticle

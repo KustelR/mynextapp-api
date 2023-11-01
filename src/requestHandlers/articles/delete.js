@@ -1,20 +1,21 @@
 import deleteArticle from "../../database/methods/articles/delete.js";
 import findArticles from "../../database/methods/articles/get.js";
-import { verifyToken } from "../../auth/jwt_gen.js";
 
 
-export default async function handle(req, res) {
-    let authToken;
-    try {
-        authToken = await verifyToken(req.headers["x-access-token"]);
+class AccessDeniedError extends Error {
+    constructor(...params) {
+        super(...params);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, Error);
+        }
+
+        this.name = "AccessDeniedError"
     }
-    catch (err) {
-        res.status(403).json({messageTitle: "Failure", message: "You must be logged in to perform this action"});
-        res.send();
-        return;
-    }
+}
 
-    const query = req.query;
+
+export default async function handle(query, userdata) {
 
     const articles = await findArticles(query);
 
@@ -25,18 +26,8 @@ export default async function handle(req, res) {
     }
     const article = articles[0]
 
-    if (!(authToken.data.login === article.authorLogin) || authToken.data.permissions.articleDeletion) {
-        res.status(403).json({messageTitle: "Failure", message: "You are restricted from deleting this article"});
-        res.send();
-        return;
+    if (!(userdata.login === article.authorLogin) || userdata.articleDeletion) {
+        throw new AccessDeniedError;
     }
-
-    try {
-        await deleteArticle(query);
-        res.status(201);
-    }
-    catch (error) {
-        res.status(500).json({messageTitle: "Failure", message: error.message});
-    }
-    res.send()
+    await deleteArticle(query);
 }

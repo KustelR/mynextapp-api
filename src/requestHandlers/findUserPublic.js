@@ -1,4 +1,5 @@
 import {verifyToken} from '../auth/jwt_gen.js';
+import MalformedTokenError from '../errors/MalformedTokenError.ts';
 
 
 async function getUserPublic(login, mongoAPI) {
@@ -6,34 +7,25 @@ async function getUserPublic(login, mongoAPI) {
 }
 
 
-async function userPublicByAccessKey(req, res, mongoAPI) {
-    const accessToken = req.headers["x-access-token"];
+async function userPublicByAccessKey(accessToken, mongoAPI) {
     let token;
-    if (accessToken) {
-        try {
-            token = await verifyToken(accessToken);
+    try {
+        token = await verifyToken(accessToken);
+    } catch (err) {
+        if (err.name === "JsonWebTokenError") {
+            throw new MalformedTokenError;
         }
-        catch (err) {
-            return res.status(400).json({messageTitle: "Failure", message: err.message})
-        }
-
-        const login = token.data.login;
-        let userInstance;
-
-        try {
-            userInstance = await getUserPublic(login, mongoAPI);
-        }
-        catch (err) {
-            return res.status(400).json({messageTitle: "Failure", message: err.message});
-        }
-
-        if (userInstance) {
-            return res.status(200).json({user: userInstance})
+        else {
+            throw err;
         }
     }
-    else {
-        return res.status(400).json({messageTitle: "Failure"});
-    }
+
+    const login = token.data.login;
+    let userInstance;
+
+        userInstance = await getUserPublic(login, mongoAPI);
+
+    return userInstance;
 }
 
 export default userPublicByAccessKey
