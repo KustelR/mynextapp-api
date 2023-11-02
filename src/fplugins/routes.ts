@@ -80,11 +80,12 @@ export default async function routes (fastify: FastifyInstance, options: object)
 
     fastify.get('/api/v2/articles', async (request, reply) => {
         const accessToken = request.headers['x-access-token'];
+        const limit = request.headers['x-article-limit'];
         let authorLogin: string | null;
         const authResult = await authUser(accessToken, ["login"])
         if (authResult) authorLogin = authResult.login;
         else authorLogin = null;
-        const article = await getArticle(request.query, authorLogin);
+        const article = await getArticle(request.query, authorLogin, limit);
         if (!article) {
             reply.statusCode = 404;
             return {message: "No articles was found"};

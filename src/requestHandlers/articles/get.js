@@ -1,8 +1,8 @@
 import findArticles from "../../database/methods/articles/get.js";
 
 
-async function getArticle(query, requesterLogin, dbCall=findArticles) {
-    const articles = await dbCall(query);
+async function getArticle(query, requesterLogin, limit, dbCall=findArticles) {
+    const articles = await dbCall(query, limit ? limit : null);
     if (articles.length === 1) {
         let article = articles[0].toObject();
 
