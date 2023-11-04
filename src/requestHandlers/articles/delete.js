@@ -25,8 +25,7 @@ export default async function handle(query, userdata) {
         return;
     }
     const article = articles[0]
-
-    if (!(userdata.login === article.authorLogin) || userdata.articleDeletion) {
+    if (!(userdata.login === article.authorLogin) && !userdata.articleDeletion && !userdata.admin) {
         throw new AccessDeniedError;
     }
     await deleteArticle(query);
