@@ -15,7 +15,6 @@ async function userPublicByAccessKey(req, res) {
         try {
             token = await verifyToken(refreshToken);
             const newToken = await createAccessToken(token.login, token)
-            //console.log("new token", newToken);
             return res.status(200).json(newToken)
         }
         catch (err) {
