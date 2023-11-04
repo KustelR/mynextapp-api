@@ -11,12 +11,12 @@ async function getUserPublic(login, mongoAPI) {
 async function userPublicByAccessKey(req, res) {
     const refreshToken = req.query.refresh_token;
     let token;
-    let login;
     if (refreshToken) {
         try {
             token = await verifyToken(refreshToken);
-            login = token.data.login;
-            return res.status(200).json({accessToken: await createAccessToken(login, token.data)})
+            const newToken = await createAccessToken(token.login, token)
+            //console.log("new token", newToken);
+            return res.status(200).json(newToken)
         }
         catch (err) {
             return res.status(400).json({messageTitle: "Failure", message: err.message})
