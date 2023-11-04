@@ -10,6 +10,7 @@ import getArticle from "../requestHandlers/articles/get.js";
 import voteArticle from "../requestHandlers/articles/vote.js";
 import deleteArticle from "../requestHandlers/articles/delete.js";
 import getArticlesPreviews from "../requestHandlers/articles/getPreviews.js";
+import setPermissions from "../requestHandlers/auth/setPermissions.ts";
 
 
 import 'dotenv/config';
@@ -106,7 +107,7 @@ export default async function routes (fastify: FastifyInstance, options: object)
 
     fastify.delete('/api/v2/articles', async (request, reply) => {
         const accessToken = request.headers['x-access-token'];
-        const authResult = await authUser(accessToken, ["login", "articleDeletion"])
+        const authResult = await authUser(accessToken, ["login", "articleDeletion", "admin"])
         try {
             return await deleteArticle(request.query, authResult);
         } catch (error) {
@@ -141,5 +142,45 @@ export default async function routes (fastify: FastifyInstance, options: object)
             login: authorLogin, 
             voteChange: request.body.voteChange
         });
+    })
+
+
+    type PermissionRequest = {
+        refreshToken: string;
+        requestedPermissions: Array<string>;
+    }
+
+    const permissionBodySchema = {
+        type: "object",
+        required: ["refreshToken", "requestedPermissions"],
+        properties: {
+            refreshToken: {type: "string"},
+            requestedPermissions: {type: "array"},
+        }
+    }
+
+    fastify.post('/auth/v2/permission', 
+        {schema: {body: permissionBodySchema}}, 
+            async (request: FastifyRequest<{ Body: PermissionRequest }>, reply) => {
+        const accessToken = request.headers['x-access-token'];
+        let authorLogin: string | null;
+        const authResult = await authUser(accessToken, ["login", "admin"])
+        if (!authResult) {
+            reply.statusCode = 403;
+            return {message: "Invalid credentials"}           
+        }
+        if (!authResult.login && !authResult.admin) {
+            reply.statusCode = 403;
+            return {message: "Invalid credentials"}          
+        }
+        try {
+            return await setPermissions(request.body.refreshToken, 
+                request.body.requestedPermissions);
+        } catch (error) {
+            if (error.name === "JsonWebTokenError") {
+                reply.statusCode = 403;
+                return {message: "Invalid credentials"}
+            }
+        }
     })
 }
