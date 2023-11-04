@@ -1,4 +1,6 @@
 import {createRefreshToken, createAccessToken} from '../../auth/token_gen.js';
+import { genRandomBytes, hash } from '../../cryptothings/CipherThing.js';
+
 
 /**
  * Registeres new user
@@ -10,7 +12,7 @@ import {createRefreshToken, createAccessToken} from '../../auth/token_gen.js';
  */
 async function handleRegistration(req, res, mongoAPI, cipher) {
     let data = req.body;
-    let encryptedData = {}
+    let encryptedData = {};
 
     const salt = await genRandomBytes(16);
     const passwordHash = await hash(data.password, 200000, salt);
@@ -40,7 +42,7 @@ async function handleRegistration(req, res, mongoAPI, cipher) {
         return res.status(400).json({messageTitle: "Failure", message: err.message});
     }
 
-    const tokenData = {permissions: {}, login: login};
+    const tokenData = {login: data.login};
     return res.status(200).json(
         {
         messageTitle: "Success", 
