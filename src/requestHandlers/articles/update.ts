@@ -1,8 +1,9 @@
 import updateArticle from "../../database/methods/articles/update.js";
+import getArticle from "../../database/methods/articles/get.js";
 import { AccessDeniedError } from "../../errors/index.js";
 
 interface keyable {
-  [key: string]: any;
+    [key: string]: any;
 }
 
 /**
@@ -14,27 +15,29 @@ interface keyable {
  * @returns
  */
 export default async function handle(
-  data: keyable,
-  query: any,
-  headers: any,
-  authorLogin: string | null,
-  dbCall = updateArticle
+    data: keyable,
+    query: any,
+    headers: any,
+    authorLogin: string | null,
+    dbCall?: Function,
+    dbFind?: Function
 ): Promise<keyable | null> {
-  let result: keyable;
-
-  result = await dbCall(query, data);
-  if (result.authorLogin !== authorLogin) {
-    throw new AccessDeniedError("You are not the article author");
-  }
-  if (headers["accept"]) {
-    const requestedContentType = headers["accept"].split(";");
-    if (
-      requestedContentType[0] === "application/json" &&
-      requestedContentType[1] === "article"
-    ) {
-      return result;
+    if (!dbCall) dbCall = updateArticle;
+    if (!dbFind) dbFind = getArticle;
+    const oldArticle = (await dbFind(query, 1))[0];
+    if (oldArticle.authorLogin !== authorLogin) {
+        throw new AccessDeniedError("You are not the article author");
     }
-  }
+    const result = await dbCall(query, data);
+    if (headers["accept"]) {
+        const requestedContentType = headers["accept"].split(";");
+        if (
+            requestedContentType[0] === "application/json" &&
+            requestedContentType[1] === "article"
+        ) {
+            return result;
+        }
+    }
 
-  return null;
+    return null;
 }
