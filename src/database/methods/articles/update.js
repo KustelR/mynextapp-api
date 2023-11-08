@@ -7,7 +7,7 @@ import findArticles from "./get.js";
  * @param {object} query Selection query for mongodb
  * @param {object} changes New data to be patched into document
  * 
- * @returns {Promise<boolean>}
+ * @returns {Promise<any>}
  */
 async function updateArticle(query, changes) {
     const articles = await findArticles(query);
