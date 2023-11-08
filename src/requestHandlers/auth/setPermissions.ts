@@ -8,7 +8,6 @@ export default async function setPermissions(
   permissions: Array<string>
 ) {
   const token = await verifyToken(oldRefreshToken);
-  console.log(token);
   let newPermissons: Permission;
   newPermissons = {};
   for (let i = 0; i < permissions.length; i++) {
@@ -16,6 +15,6 @@ export default async function setPermissions(
   }
 
   const newPayload = Object.assign(token.data, newPermissons);
-  const newToken = await createToken(newPayload);
+  const newToken = await createToken(newPayload, { algorithm: 'RS256', expiresIn: "100y" });
   return { token: newToken, data: newPayload };
 }
