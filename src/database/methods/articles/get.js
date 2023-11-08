@@ -10,6 +10,11 @@ async function findArticles(searchQuery, limit) {
         entries = await Article.find(searchQuery);
     }
     if (entries.length > 0) {
+        const length = entries.length;
+        for (let i = 0; i < length; i++) {
+            entries[i]["upvotedBy"] = undefined;
+            entries[i]["downvotedBy"] = undefined;
+        }
         return entries;
     }
     else {
