@@ -6,6 +6,7 @@ async function handle(articleData, posterLogin, dbCall=createArticle) {
 
     article.postTime = new Date();
     article.authorLogin = posterLogin;
+    article.tags = articleData.tags.split(", ");
 
     await dbCall(article)
 }
