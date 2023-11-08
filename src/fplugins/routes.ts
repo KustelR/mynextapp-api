@@ -1,15 +1,15 @@
 import { FastifyInstance } from "fastify";
 import findUserPublic from "../requestHandlers/findUserPublic.js";
 import MongoAPI from "../database/mongoAPI.js";
-import MalformedTokenError from "../errors/MalformedTokenError.ts";
 import authUser from "../utils/authUser.ts";
 import type { FastifyRequest } from "fastify";
-
+import {MalformedTokenError} from "../errors/index.ts";
 import createArticle from "../requestHandlers/articles/create.js";
 import getArticle from "../requestHandlers/articles/get.js";
 import voteArticle from "../requestHandlers/articles/vote.js";
 import deleteArticle from "../requestHandlers/articles/delete.js";
 import getArticlesPreviews from "../requestHandlers/articles/getPreviews.js";
+import updateArticle from "../requestHandlers/articles/update.js";
 import setPermissions from "../requestHandlers/auth/setPermissions.ts";
 
 import "dotenv/config";
@@ -94,6 +94,31 @@ export default async function routes(
     return article;
   });
 
+  fastify.patch(
+  "/api/v2/articles",
+  { schema: { body: articleBodySchema } },
+  async (request: FastifyRequest<{ Body: Article }>, reply) => {
+    const accessToken = request.headers["x-access-token"];
+    if (!accessToken) {
+      reply.statusCode = 403;
+      return { message: "No token provided" };
+    }
+    if (typeof accessToken !== "string") {
+      reply.statusCode = 403;
+      return { message: "Provided invalid credentials" };
+    }
+    const authResult = await authUser(accessToken, ["login"]);
+    if (authResult === null) {
+      reply.statusCode = 403;
+      return { message: "Provided invalid token" };
+    }
+    const authorLogin = authResult.login;
+    updateArticle(request.body, request.query, request.headers, authorLogin);
+  }
+);
+
+
+
   fastify.get("/api/v2/articles/previews", async (request, reply) => {
     const articles = getArticlesPreviews(request.query);
     if (!articles) {
@@ -149,13 +174,15 @@ export default async function routes(
 
   type PermissionRequest = {
     refreshToken: string;
+    accessKey: string;
     requestedPermissions: Array<string>;
   };
 
   const permissionBodySchema = {
     type: "object",
-    required: ["refreshToken", "requestedPermissions"],
+    required: ["refreshToken", "requestedPermissions", "accessKey"],
     properties: {
+      accessKey: {type: "string"},
       refreshToken: { type: "string" },
       requestedPermissions: { type: "array" },
     },
@@ -165,14 +192,7 @@ export default async function routes(
     "/auth/v2/permission",
     { schema: { body: permissionBodySchema } },
     async (request: FastifyRequest<{ Body: PermissionRequest }>, reply) => {
-      const accessToken = request.headers["x-access-token"];
-      let authorLogin: string | null;
-      const authResult = await authUser(accessToken, ["login", "admin"]);
-      if (!authResult) {
-        reply.statusCode = 403;
-        return { message: "Invalid credentials" };
-      }
-      if (!authResult.login && !authResult.admin) {
+      if (process.env.SECRET_KEY !== request.body.accessKey) {
         reply.statusCode = 403;
         return { message: "Invalid credentials" };
       }
