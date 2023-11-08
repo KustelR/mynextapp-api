@@ -25,7 +25,6 @@ async function getArticle(query, requesterLogin, limit, dbCall=findArticles) {
     else {
         return articles
     }
-    return null;
 }
 
 export default getArticle
