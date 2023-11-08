@@ -1,5 +1,5 @@
 import { verifyToken } from "../auth/jwt_gen.js";
-import MalformedTokenError from "../errors/MalformedTokenError.ts";
+import {MalformedTokenError} from "../errors/index.ts";
 
 async function getUserPublic(login, mongoAPI) {
   return await mongoAPI.readUserPublic(login);

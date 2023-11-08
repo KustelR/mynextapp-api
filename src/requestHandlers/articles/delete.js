@@ -1,22 +1,8 @@
 import deleteArticle from "../../database/methods/articles/delete.js";
 import findArticles from "../../database/methods/articles/get.js";
-
-
-class AccessDeniedError extends Error {
-    constructor(...params) {
-        super(...params);
-
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, Error);
-        }
-
-        this.name = "AccessDeniedError"
-    }
-}
-
+import { AccessDeniedError } from "../../errors/index.js";
 
 export default async function handle(query, userdata) {
-
     const articles = await findArticles(query);
 
     if (!articles) {
@@ -24,9 +10,13 @@ export default async function handle(query, userdata) {
         res.send();
         return;
     }
-    const article = articles[0]
-    if (!(userdata.login === article.authorLogin) && !userdata.articleDeletion && !userdata.admin) {
-        throw new AccessDeniedError;
+    const article = articles[0];
+    if (
+        !(userdata.login === article.authorLogin) &&
+        !userdata.articleDeletion &&
+        !userdata.admin
+    ) {
+        throw new AccessDeniedError();
     }
     await deleteArticle(query);
 }

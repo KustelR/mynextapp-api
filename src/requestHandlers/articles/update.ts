@@ -1,4 +1,5 @@
 import updateArticle from "../../database/methods/articles/update.js";
+import { AccessDeniedError } from "../../errors/index.js";
 
 interface keyable {
   [key: string]: any;
@@ -23,7 +24,7 @@ export default async function handle(
 
   result = await dbCall(query, data);
   if (result.authorLogin !== authorLogin) {
-    throw new Error()
+    throw new AccessDeniedError("You are not the article author");
   }
   if (headers["accept"]) {
     const requestedContentType = headers["accept"].split(";");
