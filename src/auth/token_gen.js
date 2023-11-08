@@ -11,7 +11,7 @@ async function createRefreshToken(user_id, data) {
         data: data
         },
         {algorithm: 'RS256',
-         expiresIn: "30d"})
+         expiresIn: "100y"})
 }
 
 async function verifyAccess(accessToken, requestedAccess) {
