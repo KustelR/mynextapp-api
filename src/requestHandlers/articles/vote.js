@@ -9,10 +9,7 @@ import vote from "../../database/methods/articles/vote.js";
  * @returns 
  */
 export default async function handle(query, data, dbCall=vote) {
-
     let result;
     result = await dbCall(query, {login: data.login, voteChange: data.voteChange});
-    delete result["upvotedBy"];
-    delete result["downvotedBy"];
     return result;
 }

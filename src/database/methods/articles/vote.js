@@ -9,15 +9,9 @@ import findArticles from "./get.js";
  * @returns {Promise<boolean>}
  */
 async function updateArticle(query, changeData) {
-    const articles = await findArticles(query);
-
-    if (!articles) throw new Error("No articles found");
-
-    if (articles.length > 1) {
-        throw new Error('Specified query returns more than one article. Can not update')
-    }
-
-    const article = articles[0];
+    const [article] = (await findArticles(query, null, true, 1))[0];
+    console.log(article);
+    if (!article) throw new Error("No articles found");
 
     if (changeData.voteChange === 1) {
         if (article.downvotedBy.includes(changeData.login)) {
