@@ -7,14 +7,16 @@
       "outDir": "dist",
       "forceConsistentCasingInFileNames": true,
       "noFallthroughCasesInSwitch": true,
-      "isolatedModules": false,
       "strict": true,
       "noImplicitAny": true,
       "useUnknownInCatchVariables": false,
       "inlineSourceMap": true,
       "allowJs": true,
       "checkJs": false,
-      "allowImportingTsExtensions": true
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "allowImportingTsExtensions": true,
+      "isolatedModules": true
     },
     "ts-node": {
         "esm": true

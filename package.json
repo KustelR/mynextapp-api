@@ -1,4 +1,7 @@
 {
+  "imports": {
+    "#src/*": "./src/*"
+  },
   "name": "serverhere",
   "version": "1.0.0",
   "description": "",
@@ -7,7 +10,7 @@
   "scripts": {
     "dev": "nodemon index.ts",
     "start": "ts-node index.ts",
-    "test": "mocha test"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -27,8 +30,12 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@babel/plugin-transform-typescript": "^7.23.3",
+    "babel-plugin-module-resolver": "^5.0.0",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
+    "jest": "^29.7.0",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.1"
   }
