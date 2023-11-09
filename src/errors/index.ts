@@ -2,7 +2,8 @@ import MalformedTokenError from "./MalformedTokenError.ts";
 
 
 class AccessDeniedError extends Error {
-    constructor(...params: any) {
+    constructor(...params: [any]
+) {
         super(...params);
 
         if (Error.captureStackTrace) {
