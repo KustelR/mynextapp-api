@@ -6,7 +6,7 @@ import CipherThing from './cryptothings/CipherThing.js';
 
 import handleRegistration from './requestHandlers/auth/registration.js'
 import handleFindUser from './requestHandlers/articles/legacy/findUserPublic.js'
-import handleTokenRefresh from './requestHandlers/auth/genNewAccessToken.js'
+import handleTokenRefresh from './requestHandlers/auth/refreshAccessToken.js'
 import handleLogin from './requestHandlers/auth/login.js';
 
 import getArticlesPreviews from './requestHandlers/articles/legacy/getPreviews.js';

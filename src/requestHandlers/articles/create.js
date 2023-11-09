@@ -8,7 +8,7 @@ async function handle(articleData, posterLogin, dbCall=createArticle) {
     article.authorLogin = posterLogin;
     article.tags = articleData.tags.split(", ");
 
-    await dbCall(article)
+    return await dbCall(article)
 }
 
 

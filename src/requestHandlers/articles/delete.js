@@ -1,6 +1,6 @@
 import deleteArticle from "../../database/methods/articles/delete.js";
 import findArticles from "../../database/methods/articles/get.js";
-import { AccessDeniedError } from "../../errors/index.js";
+import { AccessDeniedError } from "#src/errors/index.ts";
 
 export default async function handle(query, userdata) {
     const articles = await findArticles(query);

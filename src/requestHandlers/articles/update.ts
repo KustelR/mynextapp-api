@@ -1,6 +1,6 @@
 import updateArticle from "../../database/methods/articles/update.js";
 import getArticle from "../../database/methods/articles/get.js";
-import { AccessDeniedError } from "../../errors/index.js";
+import { AccessDeniedError } from "../../errors/index.ts";
 
 interface keyable {
     [key: string]: any;
