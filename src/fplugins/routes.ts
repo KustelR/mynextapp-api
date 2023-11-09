@@ -60,18 +60,10 @@ export default async function routes(
         { schema: { body: articleBodySchema } },
         async (request: FastifyRequest<{ Body: Article }>, reply) => {
             const accessToken = request.headers["x-access-token"];
-            if (!accessToken) {
-                reply.statusCode = 400;
-                return { message: "No token provided" };
-            }
-            if (typeof accessToken !== "string") {
-                reply.statusCode = 400;
-                return { message: "Provided invalid provided" };
-            }
             let authorLogin: string | null;
             const authResult = await authUser(accessToken, ["login"]);
             if (authResult === null) {
-                reply.statusCode = 400;
+                reply.statusCode = 403;
                 return { message: "Provided invalid token" };
             }
             authorLogin = authResult.login;
@@ -190,8 +182,11 @@ export default async function routes(
             const accessToken = request.headers["x-access-token"];
             let authorLogin: string | null;
             const authResult = await authUser(accessToken, ["login"]);
-            if (authResult) authorLogin = authResult.login;
-            else authorLogin = null;
+            if(authResult == null) {
+                reply.statusCode = 403;
+                return { message: "Rejected unauthorized vote"}
+            }
+            authorLogin = authResult.login;
 
             return await voteArticle(request.query, {
                 login: authorLogin,
@@ -217,7 +212,7 @@ export default async function routes(
     };
 
     fastify.post(
-        "/auth/v2/permission",
+        "/auth/v2/permissions",
         { schema: { body: permissionBodySchema } },
         async (request: FastifyRequest<{ Body: PermissionRequest }>, reply) => {
             if (process.env.SECRET_KEY !== request.body.accessKey) {
